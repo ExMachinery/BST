@@ -25,6 +25,19 @@ class Tree
     current
   end
 
+  def include?(value)
+    current = @root
+    result = false
+    until result || current.nil?
+      case value <=> current&.value
+      when -1 then current = current.left
+      when 0 then result = true
+      when 1 then current = current.right
+      end
+    end
+    result
+  end
+
   def pretty_print(node = @root, prefix = '', is_left: true)
     return unless node
 
@@ -35,8 +48,3 @@ class Tree
 
 end
 
-# Найти центр массива
-# Создать ноду в руте
-# разбить массив на левый и правый от центра
-# Для левого линка найти центр левого массива
-# для правого линка найти центр правого массива
