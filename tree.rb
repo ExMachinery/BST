@@ -38,6 +38,24 @@ class Tree
     result
   end
 
+  def insert(value)
+    current = @root
+    done = false
+    until done
+      case value <=> current&.value
+      when -1
+        current.left = Node.new(value) if current.left.nil?
+        current = current.left
+      when 0
+        done = true
+      when 1
+        current.right = Node.new(value) if current.right.nil?
+        current = current.right
+      end
+    end
+    nil
+  end
+
   def pretty_print(node = @root, prefix = '', is_left: true)
     return unless node
 
