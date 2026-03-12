@@ -142,7 +142,7 @@ class Tree
   def preorder #DLR
     return to_enum(:preorder) unless block_given?
 
-    result = depth_first_traversal(:dlr)
+    result = depth_first_traverse(@root, :dlr)
     result.each do |val|
       yield(val)
     end
@@ -152,7 +152,7 @@ class Tree
   def inorder #LDR
     return to_enum(:preorder) unless block_given?
 
-    result = depth_first_traversal(:ldr)
+    result = depth_first_traverse(@root, :ldr)
     result.each do |val|
       yield(val)
     end
@@ -162,39 +162,32 @@ class Tree
   def postorder #LRD
     return to_enum(:preorder) unless block_given?
 
-    result = depth_first_traversal(:lrd)
+    result = depth_first_traverse(@root, :lrd)
     result.each do |val|
       yield(val)
     end
     self
   end
 
-  def depth_first_traversal(instruction)
-    result = []
-    @queue << @root
-    until @queue.empty?
-      result << callstack_handler(instruction)
-    end
-    result
-  end
+  def depth_first_traverse(node, instruction)
+    return [] if node.nil?
 
-  def callstack_handler(instruction)
-    node = @queue.pop
+    array = []
     case instruction
     when :dlr
-      result = node.value
-      @queue.push(node.left) if node.left
-      @queue.push(node.right) if node.right
+      array << node.value
+      array += depth_first_traverse(node.left, :dlr)
+      array += depth_first_traverse(node.right, :dlr)
     when :ldr
-      @queue.push(node.left) if node.left
-      result = node.value
-      @queue.push(node.right) if node.right
+      array += depth_first_traverse(node.left, :ldr)
+      array << node.value
+      array += depth_first_traverse(node.right, :ldr)
     when :lrd
-      result = node.value
-      @queue.push(node.left) if node.left
-      @queue.push(node.right) if node.right
+      array += depth_first_traverse(node.left, :lrd)
+      array += depth_first_traverse(node.right, :lrd)
+      array << node.value
     end
-    result
+    array
   end
 
   def get_tree_values(node)
