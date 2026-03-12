@@ -6,4 +6,14 @@ puts "==="
 test.pretty_print
 puts "==="
 
-test.level_order.sort.each {|val| puts "#{val}"}
+result = []
+test.inorder {|val| result << val}
+p result
+
+result = []
+test.preorder {|val| result << val}
+p result
+
+result = []
+test.postorder {|val| result << val}
+p result

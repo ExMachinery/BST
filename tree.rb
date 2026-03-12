@@ -139,6 +139,64 @@ class Tree
     result
   end
 
+  def preorder #DLR
+    return to_enum(:preorder) unless block_given?
+
+    result = depth_first_traversal(:dlr)
+    result.each do |val|
+      yield(val)
+    end
+    self
+  end
+
+  def inorder #LDR
+    return to_enum(:preorder) unless block_given?
+
+    result = depth_first_traversal(:ldr)
+    result.each do |val|
+      yield(val)
+    end
+    self
+  end
+
+  def postorder #LRD
+    return to_enum(:preorder) unless block_given?
+
+    result = depth_first_traversal(:lrd)
+    result.each do |val|
+      yield(val)
+    end
+    self
+  end
+
+  def depth_first_traversal(instruction)
+    result = []
+    @queue << @root
+    until @queue.empty?
+      result << callstack_handler(instruction)
+    end
+    result
+  end
+
+  def callstack_handler(instruction)
+    node = @queue.pop
+    case instruction
+    when :dlr
+      result = node.value
+      @queue.push(node.left) if node.left
+      @queue.push(node.right) if node.right
+    when :ldr
+      @queue.push(node.left) if node.left
+      result = node.value
+      @queue.push(node.right) if node.right
+    when :lrd
+      result = node.value
+      @queue.push(node.left) if node.left
+      @queue.push(node.right) if node.right
+    end
+    result
+  end
+
   def get_tree_values(node)
     return [] if node == nil
     result = []
