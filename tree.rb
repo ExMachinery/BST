@@ -1,9 +1,10 @@
 require_relative 'node'
 
 class Tree
-  attr_accessor :root
+  attr_accessor :root, :queue
   def initialize(array)
     @root = nil
+    @queue = Array.new
     build_tree(array.uniq.sort)
   end
 
@@ -63,7 +64,7 @@ class Tree
     case node_for_remove.childs?
     when 0 then delete_leaf_node(node_for_remove, previous_node)
     when 1 then delete_onechild_node(node_for_remove, previous_node)
-    when 2 then puts "this is two child node!"
+    when 2 then delete_twochild_node(node_for_remove, previous_node)
     end
     nil
   end
@@ -84,17 +85,30 @@ class Tree
   end
 
   def delete_twochild_node(current, previous)
-
+    puts "#delete_twochild ran"
+    successor = find_inorder_successsor(current.right)
+    successor.left = current.left
+    successor.right = current.right
+    if !previous.nil?
+      previous.left = successor if previous.left == current
+      previous.right = successor if previous.right == current
+    else
+      @root = successor
+    end
   end
 
-  def find_inorder_successsor(node, value)
-    array_of_successors = get_tree_values(node, []).compact.sort
-    successor = get_node([array_of_successors[0]])
+  def find_inorder_successsor(node)
+    puts "#find_inorder ran"
+    array_of_successors = get_tree_values(node).compact.sort
+    puts "#get_tree_values DONE!"
+    p array_of_successors
+    successor = get_node(array_of_successors[0])
+    puts "#get_node DONE!"
     case successor[0].childs?
     when 0 
       delete_leaf_node(successor[0], successor[1])
     when 1
-      delete_onechild(successor[0], successor[1])
+      delete_onechild_node(successor[0], successor[1])
     when 2
       puts "There is a case where successor is also a 2child node. Suffer."
     end
@@ -102,18 +116,43 @@ class Tree
     result
   end
 
-  def get_tree_values(node)
-    return [] if node.nil?
+  def level_order
+    return to_enum(:level_order) unless block_given?
+
     result = []
+    @queue << @root
+    until @queue.empty?
+      result << queue_handler
+    end
+
+    result.each do |val|
+      yield(val)
+    end
+    self
+  end
+
+  def queue_handler
+    node = @queue.shift
+    result = node.value
+    @queue.push(node.left) if node.left
+    @queue.push(node.right) if node.right
+    result
+  end
+
+  def get_tree_values(node)
+    return [] if node == nil
+    result = []
+    result << node.value
     result += get_tree_values(node.left)
     result += get_tree_values(node.right)
     result
   end
 
   def get_node(value)
-    current = @root
-    previous = nil
     result = nil
+    previous = nil
+    result = [@root, nil] if value == @root.value
+    current = @root
     until result || current.nil?
       case value <=> current&.value
       when -1 then previous, current = current, current.left
