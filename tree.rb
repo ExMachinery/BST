@@ -190,6 +190,20 @@ class Tree
     array
   end
 
+  def height(value)
+    node = get_node(value)
+    return nil if node.nil?
+    counter = deep_diver(node[0])
+    counter - 1
+  end
+
+  def deep_diver(node)
+    return 0 if node.nil?
+    result = 1
+    result += deep_diver(node.left) > deep_diver(node.right) ? deep_diver(node.left) : deep_diver(node.right)
+    result
+  end
+
   def get_tree_values(node)
     return [] if node == nil
     result = []
@@ -213,8 +227,6 @@ class Tree
     end
     result
   end
-
-
 
   def pretty_print(node = @root, prefix = '', is_left: true)
     return unless node
