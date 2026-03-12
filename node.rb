@@ -5,4 +5,11 @@ class Node
     @left = left
     @right = right
   end
+
+  def childs?
+    result = 1
+    result = 2 if self.left && self.right
+    result = 0 if !self.left && !self.right
+    result
+  end
 end
