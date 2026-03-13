@@ -145,7 +145,7 @@ class Tree
   end
 
   def inorder #LDR
-    return to_enum(:preorder) unless block_given?
+    return to_enum(:inorder) unless block_given?
 
     result = depth_first_traverse(@root, :ldr)
     result.each do |val|
@@ -155,7 +155,7 @@ class Tree
   end
 
   def postorder #LRD
-    return to_enum(:preorder) unless block_given?
+    return to_enum(:postorder) unless block_given?
 
     result = depth_first_traverse(@root, :lrd)
     result.each do |val|
@@ -208,7 +208,7 @@ class Tree
   def rebalance
     current_array = get_tree_values(@root)
     @root = nil
-    build_tree(current_array)
+    build_tree(current_array.sort)
     nil
   end
 

@@ -1,17 +1,39 @@
 require_relative 'tree'
 
-test = Tree.new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+test = Tree.new(Array.new(15) {rand(1..100)})
+test.balanced?
+arr = []
+test.preorder {|val| arr << val}
+p arr
+
+arr = []
+test.inorder {|val| arr << val}
+p arr
+
+arr = []
+test.postorder {|val| arr << val}
+p arr
+
+test.insert(112)
+test.insert(171)
+test.insert(122)
 
 test.balanced?
-test.insert(18)
-test.insert(20)
-test.insert(22)
-puts "==="
-test.pretty_print
-puts "==="
-test.balanced?
 test.rebalance
+test.balanced?
+
+arr = []
+test.preorder {|val| arr << val}
+p arr
+
+arr = []
+test.inorder {|val| arr << val}
+p arr
+
+arr = []
+test.postorder {|val| arr << val}
+p arr
+
 puts "==="
 test.pretty_print
 puts "==="
-test.balanced?
