@@ -85,7 +85,6 @@ class Tree
   end
 
   def delete_twochild_node(current, previous)
-    puts "#delete_twochild ran"
     successor = find_inorder_successsor(current.right)
     successor.left = current.left
     successor.right = current.right
@@ -98,12 +97,8 @@ class Tree
   end
 
   def find_inorder_successsor(node)
-    puts "#find_inorder ran"
     array_of_successors = get_tree_values(node).compact.sort
-    puts "#get_tree_values DONE!"
-    p array_of_successors
     successor = get_node(array_of_successors[0])
-    puts "#get_node DONE!"
     case successor[0].childs?
     when 0 
       delete_leaf_node(successor[0], successor[1])
@@ -256,6 +251,5 @@ class Tree
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", is_left: true)
   end
-
 end
 
