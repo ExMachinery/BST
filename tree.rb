@@ -197,11 +197,12 @@ class Tree
     counter - 1
   end
 
-  def depth(value)
-    result = get_node(value, :depth)
-    result
+  def balanced?
+    left_tree, right_tree = deep_diver(@root.left), deep_diver(@root.right)
+    sub = left_tree - right_tree
+    sub.between?(-1, 1)
   end
-
+  
   def deep_diver(node)
     return 0 if node.nil?
     result = 1
@@ -209,6 +210,18 @@ class Tree
     result
   end
 
+  def rebalance
+    current_array = get_tree_values(@root)
+    @root = nil
+    build_tree(current_array)
+    nil
+  end
+
+  def depth(value)
+    result = get_node(value, :depth)
+    return result[1] if result[0]
+  end
+  
   def get_tree_values(node)
     return [] if node == nil
     result = []
@@ -232,7 +245,7 @@ class Tree
       end
       depth += 1
     end
-    return depth if instruction == :depth
+    return [result, depth] if instruction == :depth
     result
   end
 
