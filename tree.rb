@@ -58,6 +58,11 @@ class Tree
   end
 
   def delete(value)
+    if value == @root.value
+      @root = nil
+      return nil
+    end
+    
     proxy = get_node(value)
     node_for_remove = proxy[0]
     previous_node = proxy[1]
@@ -71,8 +76,10 @@ class Tree
 
   def delete_leaf_node(current, previous)
     value = current.value
-    previous.left = nil if previous.left == current
-    previous.right = nil if previous.right == current
+    if previous
+      previous.left = nil if previous.left == current
+      previous.right = nil if previous.right == current
+    end
     value
   end
 
@@ -97,17 +104,22 @@ class Tree
   end
 
   def find_inorder_successsor(node)
-    array_of_successors = get_tree_values(node).compact.sort
-    successor = get_node(array_of_successors[0])
-    case successor[0].childs?
-    when 0 
-      delete_leaf_node(successor[0], successor[1])
-    when 1
-      delete_onechild_node(successor[0], successor[1])
-    when 2
-      puts "There is a case where successor is also a 2child node. Suffer."
+
+    current, previous = node.right, nil
+    while current.left
+      previous = current
+      current = current.left
     end
-    result = successor[0]
+    
+    case current.childs?
+    when 0 
+      delete_leaf_node(current, previous)
+    when 1
+      delete_onechild_node(current, previous)
+    when 2
+      raise "Impossibru!"
+    end
+    result = current
     result
   end
 
