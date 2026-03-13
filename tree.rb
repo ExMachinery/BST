@@ -197,6 +197,11 @@ class Tree
     counter - 1
   end
 
+  def depth(value)
+    result = get_node(value, :depth)
+    result
+  end
+
   def deep_diver(node)
     return 0 if node.nil?
     result = 1
@@ -213,10 +218,11 @@ class Tree
     result
   end
 
-  def get_node(value)
+  def get_node(value, instruction = nil)
     result = nil
     previous = nil
-    result = [@root, nil] if value == @root.value
+    depth = -1
+    result, depth = [@root, nil], 0 if value == @root.value
     current = @root
     until result || current.nil?
       case value <=> current&.value
@@ -224,7 +230,9 @@ class Tree
       when 0 then result = [current, previous]
       when 1 then previous, current = current, current.right
       end
+      depth += 1
     end
+    return depth if instruction == :depth
     result
   end
 

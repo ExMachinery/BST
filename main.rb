@@ -9,5 +9,6 @@ puts "==="
 test.pretty_print
 puts "==="
 
-test.height(12)
-test.height(88)
+test.depth(22)
+test.depth(8)
+test.height(8)
